@@ -1,13 +1,9 @@
-import {  useState } from "react";
-import Catalog from "../feactures/catalog/Catalog";
+import { useState } from "react";
 import { Box, Container, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import NavBar from "./NavBar";
-
-
+import { Outlet } from "react-router-dom";
 
 function App() {
- 
-  
   const [darkMode, setDarkMode] = useState(false);
 
   const paletteType = darkMode ? "dark" : "light";
@@ -15,7 +11,7 @@ function App() {
     palette: {
       mode: paletteType,
       background: {
-        default: paletteType === "light" ? '#eaeaea' : '#121212',
+        default: paletteType === "light" ? "#eaeaea" : "#121212",
       },
     },
   });
@@ -24,20 +20,18 @@ function App() {
     setDarkMode(!darkMode);
   };
 
-  
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <NavBar darkMode={darkMode} handleThemeChange={handleThemeChange} />
       <Box
         sx={{
-          minHeight: '100vh',
+          minHeight: "100vh",
           background: theme.palette.background.default,
         }}
       >
         <Container maxWidth="xl" sx={{ mt: 14 }}>
-          <Catalog  />
+          <Outlet /> {/* Aquí se mostrará HomePage, Catalog, etc. según la ruta */}
         </Container>
       </Box>
     </ThemeProvider>
