@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import Catalog from "../feactures/catalog/Catalog";
-import { Box, Button, Container, Typography } from "@mui/material";
+import {
+  Box,
+  Container,
+  createTheme,
+  CssBaseline,
+  ThemeProvider,
+} from "@mui/material";
+import NavBar from "./NavBar";
+
 interface Product {
   id: number;
   name: string;
@@ -16,6 +24,22 @@ function App() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [darkMode, setDarkMode] = useState(false);
+  const paletteType = darkMode ? "dark" : "light";
+
+  const theme = createTheme({
+    palette: {
+      mode: paletteType,
+      background: {
+        default: paletteType === "light" ? "#eaeaea" : "#121212",
+      },
+    },
+  });
+
+  const handleThemeChange = () => {
+    setDarkMode(!darkMode);
+  };
 
   useEffect(() => {
     fetch("http://localhost:5086/api/products")
@@ -33,36 +57,24 @@ function App() {
       });
   }, []);
 
-  const addProduct = () => {
-    const newId =
-      products.length > 0 ? Math.max(...products.map((p) => p.id)) + 1 : 1;
-    const newProduct: Product = {
-      id: newId,
-      name: "Producto " + newId,
-      price: 100 + newId * 10,
-      quantityInStock: 100,
-      description: "Producto de prueba",
-      pictureUrl: "https://picsum.photos/200",
-      type: "test",
-      brand: "genérico",
-    };
-    setProducts((prevState) => [...prevState, newProduct]);
-  };
-
   if (loading) return <p>Cargando productos...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <Container maxWidth="xl">
-      <Box display= 'flex' justifyContent='center' gap={3} marginY={3}>
-        <Typography variant="h4">Productos</Typography>
-        <Button variant="contained" onClick={addProduct}>
-          Agregar producto
-        </Button>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <NavBar darkMode={darkMode} handleThemeChange={handleThemeChange} />
+      <Box
+        sx={{
+          minHeight: "100vh",
+          backgroundColor: theme.palette.background.default,
+        }}
+      >
+        <Container maxWidth="xl" sx={{ mt: 14 }}>
+          <Catalog products={products} />
+        </Container>
       </Box>
-
-      <Catalog products={products} />
-    </Container>
+    </ThemeProvider>
   );
 }
 
