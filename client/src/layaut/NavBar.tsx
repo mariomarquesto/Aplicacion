@@ -11,8 +11,10 @@ import {
   Box,
   useTheme,
   useMediaQuery,
+  Badge,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -66,27 +68,47 @@ export default function NavBar({ darkMode, handleThemeChange }: Props) {
     <>
       <AppBar position="fixed">
         <Toolbar sx={{ justifyContent: "space-between" }}>
-          <Typography variant="h6" component={NavLink} to="/" sx={{ color: "inherit", textDecoration: "none" }}>
+          <Typography
+            variant="h6"
+            component={NavLink}
+            to="/"
+            sx={{ color: "inherit", textDecoration: "none" }}
+          >
             Mi Tienda
           </Typography>
 
-          <Switch checked={darkMode} onChange={handleThemeChange} />
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Switch checked={darkMode} onChange={handleThemeChange} />
 
-          {isMobile ? (
+            {/* IconButton carrito */}
             <IconButton
-              edge="end"
+              component={NavLink}
+              to="/cart"
+              size="large"
+              aria-label="shopping cart"
               color="inherit"
-              aria-label="menu"
-              onClick={toggleDrawer}
             >
-              <MenuIcon />
+              <Badge badgeContent={4} color="secondary">
+                <ShoppingCartIcon />
+              </Badge>
             </IconButton>
-          ) : (
-            <Box sx={{ display: "flex", gap: 2 }}>
-              {renderLinks(midLinks)}
-              {renderLinks(rightLinks)}
-            </Box>
-          )}
+
+            {isMobile ? (
+              <IconButton
+                edge="end"
+                color="inherit"
+                aria-label="menu"
+                onClick={toggleDrawer}
+              >
+                <MenuIcon />
+              </IconButton>
+            ) : (
+              <Box sx={{ display: "flex", gap: 2 }}>
+                {renderLinks(midLinks)}
+                {renderLinks(rightLinks)}
+              </Box>
+            )}
+          </Box>
         </Toolbar>
       </AppBar>
 
